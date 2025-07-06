@@ -1,0 +1,149 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="http://example.com/bank"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             targetNamespace="http://example.com/bank"
+             name="BankService">
+
+    <types>
+        <xsd:schema targetNamespace="http://example.com/bank">
+            <xsd:element name="CreateAccountRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="customerId" type="xsd:string"/>
+                        <xsd:element name="accountType" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="CreateAccountResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="accountNumber" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="GetAccountDetailsRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="accountNumber" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="GetAccountDetailsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="customer" type="tns:Customer"/>
+                        <xsd:element name="balance" type="xsd:decimal"/>
+                        <xsd:element name="transactions" type="tns:Transaction" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="TransferFundsRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="fromAccount" type="xsd:string"/>
+                        <xsd:element name="toAccount" type="xsd:string"/>
+                        <xsd:element name="amount" type="xsd:decimal"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="TransferFundsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="status" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Customer">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="customerId" type="xsd:string"/>
+                        <xsd:element name="name" type="xsd:string"/>
+                        <xsd:element name="contactInfo" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Transaction">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="transactionId" type="xsd:string"/>
+                        <xsd:element name="amount" type="xsd:decimal"/>
+                        <xsd:element name="date" type="xsd:dateTime"/>
+                        <xsd:element name="type" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <message name="CreateAccountRequest">
+        <part name="parameters" element="tns:CreateAccountRequest"/>
+    </message>
+    <message name="CreateAccountResponse">
+        <part name="parameters" element="tns:CreateAccountResponse"/>
+    </message>
+    <message name="GetAccountDetailsRequest">
+        <part name="parameters" element="tns:GetAccountDetailsRequest"/>
+    </message>
+    <message name="GetAccountDetailsResponse">
+        <part name="parameters" element="tns:GetAccountDetailsResponse"/>
+    </message>
+    <message name="TransferFundsRequest">
+        <part name="parameters" element="tns:TransferFundsRequest"/>
+    </message>
+    <message name="TransferFundsResponse">
+        <part name="parameters" element="tns:TransferFundsResponse"/>
+    </message>
+
+    <portType name="BankServicePortType">
+        <operation name="CreateAccount">
+            <input message="tns:CreateAccountRequest"/>
+            <output message="tns:CreateAccountResponse"/>
+        </operation>
+        <operation name="GetAccountDetails">
+            <input message="tns:GetAccountDetailsRequest"/>
+            <output message="tns:GetAccountDetailsResponse"/>
+        </operation>
+        <operation name="TransferFunds">
+            <input message="tns:TransferFundsRequest"/>
+            <output message="tns:TransferFundsResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="BankServiceBinding" type="tns:BankServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="CreateAccount">
+            <soap:operation soapAction="http://example.com/bank/CreateAccount"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="GetAccountDetails">
+            <soap:operation soapAction="http://example.com/bank/GetAccountDetails"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="TransferFunds">
+            <soap:operation soapAction="http://example.com/bank/TransferFunds"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="BankService">
+        <port name="BankServicePort" binding="tns:BankServiceBinding">
+            <soap:address location="http://localhost:8080/bankservice"/>
+        </port>
+    </service>
+</definitions>
